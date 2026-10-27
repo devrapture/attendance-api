@@ -1,0 +1,253 @@
+// use prisma-8
+enum UserStatus {
+  @@type("pg/text@1")
+  ACTIVE = "active"
+  DISABLED = "disabled"
+}
+
+enum OrganizationStatus {
+  @@type("pg/text@1")
+  ACTIVE = "active"
+  SUSPENDED = "suspended"
+}
+
+enum OrganizationRole {
+  @@type("pg/text@1")
+  OWNER = "owner"
+  ADMIN = "admin"
+  SUB_ADMIN = "sub_admin"
+}
+
+enum MembershipStatus {
+  @@type("pg/text@1")
+  ACTIVE = "active"
+  REVOKED = "revoked"
+}
+
+enum ClientPlatform {
+  @@type("pg/text@1")
+  WEB = "web"
+  IOS = "ios"
+  ANDROID = "android"
+  OTHER = "other"
+}
+
+enum SessionRevocationReason {
+  @@type("pg/text@1")
+  LOGOUT = "logout"
+  LOGOUT_ALL = "logout_all"
+  USER_REQUEST = "user_request"
+  PASSWORD_CHANGED = "password_changed"
+  PASSWORD_RESET = "password_reset"
+  TOKEN_REUSE = "token_reuse"
+  DEVICE_REVOKED = "device_revoked"
+  MEMBERSHIP_REVOKED = "membership_revoked"
+  SECURITY = "security"
+  ADMIN_ACTION = "admin_action"
+}
+
+enum EmployeeStatus {
+  @@type("pg/text@1")
+  ACTIVE = "active"
+  INACTIVE = "inactive"
+}
+
+enum AttendanceStatus {
+  @@type("pg/text@1")
+  PRESENT = "present"
+  ABSENT = "absent"
+  PERMISSION = "permission"
+}
+
+enum AttendanceSource {
+  @@type("pg/text@1")
+  SINGLE_API = "single_api"
+  BULK_API = "bulk_api"
+  OFFLINE_SYNC = "offline_sync"
+}
+
+enum AttendanceAuditAction {
+  @@type("pg/text@1")
+  CREATED = "created"
+  UPDATED = "updated"
+}
+
+enum ImportFileType {
+  @@type("pg/text@1")
+  CSV = "csv"
+  XLSX = "xlsx"
+}
+
+enum ImportStatus {
+  @@type("pg/text@1")
+  PROCESSING = "processing"
+  COMPLETED = "completed"
+  COMPLETED_WITH_ERRORS = "completed_with_errors"
+  FAILED = "failed"
+}
+
+enum SyncOperationType {
+  @@type("pg/text@1")
+  ATTENDANCE_UPSERT = "attendance_upsert"
+}
+
+enum SyncOperationStatus {
+  @@type("pg/text@1")
+  APPLIED = "applied"
+  NO_CHANGE = "no_change"
+  REJECTED = "rejected"
+  CONFLICT = "conflict"
+}
+
+enum SyncEntityType {
+  @@type("pg/text@1")
+  EMPLOYEE = "employee"
+  ATTENDANCE = "attendance"
+  DEVICE = "device"
+}
+
+enum SyncChangeType {
+  @@type("pg/text@1")
+  UPSERT = "upsert"
+  DELETE = "delete"
+}
+
+enum SyncConflictStatus {
+  @@type("pg/text@1")
+  OPEN = "open"
+  RESOLVED = "resolved"
+}
+
+enum SyncConflictResolution {
+  @@type("pg/text@1")
+  KEEP_SERVER = "keep_server"
+  APPLY_CLIENT = "apply_client"
+  MANUAL_OVERRIDE = "manual_override"
+  DISMISSED = "dismissed"
+}
+
+model User {
+  id                    Uuid                   @id @onCreate(uuid())
+  email                 String                 @unique()
+  passwordHash          String                 @map("password_hash")
+  firstName             String                 @map("first_name")
+  lastName              String                 @map("last_name")
+  status                UserStatus             @default(ACTIVE)
+  authVersion           Int                    @default(1)
+  emailVerifiedAt       Timestamptz(3)?        @map("email_verified_at")
+  passwordChangedAt     Timestamptz(3)?        @map("password_changed_at")
+  lastLoginAt           Timestamptz(3)?        @map("last_login_at")
+  createdAt             temporal.createdAt()   @map("created_at") @default(now())
+  updatedAt             temporal.updatedAt()   @map("updated_at")
+
+  createdOrganizations  Organization[]         @relation("OrganizationCreator")
+  memberships           OrganizationMember[]
+  sessions              Session[]
+  passwordRefreshTokens PasswordRefreshToken[]
+
+  @@index([status])
+  @@map("users")
+}
+
+model Session {
+  id                Uuid                     @id @onCreate(uuid())
+  userId            Uuid                     @map("user_id")
+  platform          ClientPlatform
+  deviceName        String?                  @map("device_name")
+  installationId    String?                  @map("installation_id")
+  appVersion        String?                  @map("app_version")
+  userAgent         String?                  @map("user_agent")
+  ipAddress         String?                  @map("ip_address")
+  currentGeneration Int                      @default(1) @map("current_generation")
+  lastUsedAt        Timestamptz(3)           @default(now()) @map("last_used_at")
+  expiredAt         Timestamptz(3)           @map("expired_at")
+  revokedAt         Timestamptz(3)?          @map("revoked_at")
+  revokedReason     SessionRevocationReason? @map("revoked_reason")
+
+  createdAt         temporal.createdAt()     @map("created_at") @default(now())
+  updatedAt         temporal.updatedAt()     @map("updated_at")
+
+  user              User                     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  refreshTokens     RefreshToken[]
+
+  @@index([userId, revokedAt, expiredAt])
+  @@index([installationId])
+  @@map("sessions")
+}
+
+model RefreshToken {
+  id              Uuid                 @id @onCreate(uuid())
+  sessionId       Uuid                 @map("session_id")
+  tokenHash       String               @map("token_hash")
+  generation      Int
+  expiredAt       Timestamptz(3)       @map("expired_at")
+  usedAt          Timestamptz(3)?      @map("used_at")
+  revokedAt       Timestamptz(3)?      @map("revoked_at")
+  reuseDetectedAt Timestamptz(3)?      @map("reuse_detected_at")
+  replacedById    Uuid?                @unique @map("replaced_by_id")
+
+  createdAt       temporal.createdAt() @map("created_at")
+
+  session         Session              @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  replacedBy      RefreshToken?        @relation("RefreshTokenReplacement", fields: [replacedById], references: [id], onDelete: Restrict)
+  replaces        RefreshToken?        @relation("RefreshTokenReplacement")
+
+  @@unique([sessionId, generation])
+  @@index([sessionId, expiredAt])
+
+  @@map("refresh_tokens")
+}
+
+model PasswordRefreshToken {
+  id        Uuid                 @id @onCreate(uuid())
+  userId    Uuid                 @map("user_id")
+  tokenHash String               @map("token_hash")
+  expiredAt Timestamptz(3)       @map("expired_at")
+  usedAt    Timestamptz(3)?      @map("used_at")
+
+  createdAt temporal.createdAt() @map("created_at")
+
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId, expiredAt])
+  @@map("password_refresh_token")
+}
+
+model Organization {
+  id              Uuid                 @id @onCreate(uuid())
+  name            String
+  timeZone        String               @default("UTC") @map("time_zone")
+  status          OrganizationStatus
+  createdByUserId Uuid                 @map("created_by_user_id")
+
+  createdAt       temporal.createdAt() @map("created_at") @default(now())
+  updatedAt       temporal.updatedAt() @map("updated_at")
+
+  createdBy       User                 @relation("OrganizationCreator", fields: [createdByUserId], references: [id])
+  members         OrganizationMember[]
+
+  @@index([createdByUserId])
+  @@index([status])
+  @@map("organizations")
+}
+
+model OrganizationMember {
+  id             Uuid                 @id @onCreate(uuid())
+  userId         Uuid                 @map("user_id")
+  organizationId Uuid                 @map("organization_id")
+  role           OrganizationRole
+  status         MembershipStatus
+  revokedAt      Timestamptz(3)?      @map("revoked_at")
+
+  createdAt      temporal.createdAt() @map("created_at") @default(now())
+  updatedAt      temporal.updatedAt() @map("updated_at")
+
+  organization   Organization         @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@unique([organizationId, userId])
+  @@unique([organizationId, id])
+  @@index([userId, status])
+  @@index([organizationId, status, role])
+  @@map("organization_members")
+}
