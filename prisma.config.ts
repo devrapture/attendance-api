@@ -12,7 +12,7 @@ const config: PrismaConfig = definePrismaConfig({
   orm: ormConfig({
     contract: './src/prisma/contract.prisma',
     db: {
-      connection: process.env['DATABASE_URL']!,
+      connection: process.env['DATABASE_URL'],
     },
   }),
 });

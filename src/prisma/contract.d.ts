@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'7b1aac3b61fb4f4e2b07cccc142346b7f048399aaa870b69344fbfc56d2b233c'>;
+  StorageHashBase<'cd73ba16b4afbeb175112d884cb36f093d181c1ccfdcfe80a8a44138451da5fc'>;
 export type ExecutionHash =
   ExecutionHashBase<'131efdeb65e0a53d4f4a342a0d1a7b7f800b161dacc219c6d6a9a990b2fda41a'>;
 export type ProfileHash =
@@ -253,12 +253,12 @@ type FieldTypeOverrides = {
           readonly input: 'owner' | 'admin' | 'sub_admin';
         };
         readonly status: {
-          readonly output: 'active' | 'suspended';
-          readonly input: 'active' | 'suspended';
+          readonly output: 'active' | 'revoked';
+          readonly input: 'active' | 'revoked';
         };
       };
       readonly Session: {
-        readonly plaform: {
+        readonly platform: {
           readonly output: 'web' | 'ios' | 'android' | 'other';
           readonly input: 'web' | 'ios' | 'android' | 'other';
         };
@@ -318,8 +318,8 @@ type ColumnTypeOverrides = {
         readonly input: 'owner' | 'admin' | 'sub_admin';
       };
       readonly status: {
-        readonly output: 'active' | 'suspended';
-        readonly input: 'active' | 'suspended';
+        readonly output: 'active' | 'revoked';
+        readonly input: 'active' | 'revoked';
       };
     };
     readonly organizations: {
@@ -329,11 +329,11 @@ type ColumnTypeOverrides = {
       };
     };
     readonly sessions: {
-      readonly plaform: {
+      readonly platform: {
         readonly output: 'web' | 'ios' | 'android' | 'other';
         readonly input: 'web' | 'ios' | 'android' | 'other';
       };
-      readonly revokedReason: {
+      readonly revoked_reason: {
         readonly output:
           | 'logout'
           | 'logout_all'
@@ -443,7 +443,7 @@ export namespace Models {
     installationId: FieldOutputTypes['public']['Session']['installationId'];
     ipAddress: FieldOutputTypes['public']['Session']['ipAddress'];
     lastUsedAt: FieldOutputTypes['public']['Session']['lastUsedAt'];
-    plaform: FieldOutputTypes['public']['Session']['plaform'];
+    platform: FieldOutputTypes['public']['Session']['platform'];
     revokedAt: FieldOutputTypes['public']['Session']['revokedAt'];
     revokedReason: FieldOutputTypes['public']['Session']['revokedReason'];
     updatedAt: FieldOutputTypes['public']['Session']['updatedAt'];
@@ -648,7 +648,7 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly timeZone: {
+                readonly time_zone: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
@@ -801,7 +801,7 @@ type ContractBase = Omit<
                   readonly nullable: true;
                   readonly many: false;
                 };
-                readonly reuse_Dectected_at: {
+                readonly reuse_detected_at: {
                   readonly dataType: 'pg/timestamptz';
                   readonly codecId: 'pg/timestamptz-temporal@1';
                   readonly nullable: true;
@@ -945,16 +945,10 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly precision: 3 };
                   readonly many: false;
                 };
-                readonly plaform: {
+                readonly platform: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
-                  readonly many: false;
-                };
-                readonly revokedReason: {
-                  readonly dataType: 'pg/text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
                   readonly many: false;
                 };
                 readonly revoked_at: {
@@ -962,6 +956,12 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-temporal@1';
                   readonly nullable: true;
                   readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly revoked_reason: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
                   readonly many: false;
                 };
                 readonly updated_at: {
@@ -1316,7 +1316,7 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly name: { readonly column: 'name' };
                 readonly status: { readonly column: 'status' };
-                readonly timeZone: { readonly column: 'timeZone' };
+                readonly timeZone: { readonly column: 'time_zone' };
                 readonly updatedAt: { readonly column: 'updated_at' };
               };
             };
@@ -1575,7 +1575,7 @@ type ContractBase = Omit<
                 readonly generation: { readonly column: 'generation' };
                 readonly id: { readonly column: 'id' };
                 readonly replacedById: { readonly column: 'replaced_by_id' };
-                readonly reuseDetectedAt: { readonly column: 'reuse_Dectected_at' };
+                readonly reuseDetectedAt: { readonly column: 'reuse_detected_at' };
                 readonly revokedAt: { readonly column: 'revoked_at' };
                 readonly sessionId: { readonly column: 'session_id' };
                 readonly tokenHash: { readonly column: 'token_hash' };
@@ -1632,7 +1632,7 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly precision: 3 };
                 };
               };
-              readonly plaform: {
+              readonly platform: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
@@ -1699,9 +1699,9 @@ type ContractBase = Omit<
                 readonly installationId: { readonly column: 'installation_id' };
                 readonly ipAddress: { readonly column: 'ip_address' };
                 readonly lastUsedAt: { readonly column: 'last_used_at' };
-                readonly plaform: { readonly column: 'plaform' };
+                readonly platform: { readonly column: 'platform' };
                 readonly revokedAt: { readonly column: 'revoked_at' };
-                readonly revokedReason: { readonly column: 'revokedReason' };
+                readonly revokedReason: { readonly column: 'revoked_reason' };
                 readonly updatedAt: { readonly column: 'updated_at' };
                 readonly userAgent: { readonly column: 'user_agent' };
                 readonly userId: { readonly column: 'user_id' };

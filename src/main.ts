@@ -5,6 +5,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module.js';
+import { APP_CONFIG, AppConfig } from './config/app-config.js';
 
 const ONE_MEGABYTE = 1_048_576;
 
@@ -30,6 +31,7 @@ async function bootstrap() {
     defaultVersion: '1',
   });
   app.enableShutdownHooks();
-  await app.listen(process.env.PORT ?? 3000);
+  const config = app.get<AppConfig>(APP_CONFIG);
+  await app.listen(config.port, '0.0.0.0');
 }
 await bootstrap();

@@ -5,4 +5,4 @@ import { PrismaModule } from './prisma/prisma.module.js';
 @Module({
   imports: [PlatformConfigModule, PrismaModule],
 })
-export class AppModule {}
+export class AppModule { }

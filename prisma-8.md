@@ -66,7 +66,7 @@ export default definePrismaConfig({
 Notice the `DATABASE_URL` above? It's defined in your [`.env`](./.env) file:
 
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/mydb"
+DATABASE_URL="postgresql://attendance:attendance_dev_password@localhost:5433/attendance"
 ```
 
 You can customize how your environment variables are loaded by changing or removing the `import 'dotenv/config'` line.

@@ -454,7 +454,7 @@
                   "column": "status"
                 },
                 "timeZone": {
-                  "column": "timeZone"
+                  "column": "time_zone"
                 },
                 "updatedAt": {
                   "column": "updated_at"
@@ -518,7 +518,7 @@
                 },
                 "valueSet": {
                   "entityKind": "enum",
-                  "entityName": "OrganizationStatus",
+                  "entityName": "MembershipStatus",
                   "namespaceId": "public",
                   "plane": "domain"
                 }
@@ -850,7 +850,7 @@
                   "column": "replaced_by_id"
                 },
                 "reuseDetectedAt": {
-                  "column": "reuse_Dectected_at"
+                  "column": "reuse_detected_at"
                 },
                 "revokedAt": {
                   "column": "revoked_at"
@@ -940,7 +940,7 @@
                   }
                 }
               },
-              "plaform": {
+              "platform": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
@@ -1060,14 +1060,14 @@
                 "lastUsedAt": {
                   "column": "last_used_at"
                 },
-                "plaform": {
-                  "column": "plaform"
+                "platform": {
+                  "column": "platform"
                 },
                 "revokedAt": {
                   "column": "revoked_at"
                 },
                 "revokedReason": {
-                  "column": "revokedReason"
+                  "column": "revoked_reason"
                 },
                 "updatedAt": {
                   "column": "updated_at"
@@ -1307,8 +1307,8 @@
                   "prefix": "organization_members_role_check"
                 },
                 {
-                  "expression": "\"status\" IN ('active', 'suspended')",
-                  "name": "organization_members_status_check_697c26d8",
+                  "expression": "\"status\" IN ('active', 'revoked')",
+                  "name": "organization_members_status_check_4cc0f702",
                   "prefix": "organization_members_status_check"
                 }
               ],
@@ -1357,7 +1357,7 @@
                   "nullable": false,
                   "valueSet": {
                     "entityKind": "valueSet",
-                    "entityName": "OrganizationStatus",
+                    "entityName": "MembershipStatus",
                     "namespaceId": "public",
                     "plane": "storage"
                   }
@@ -1516,7 +1516,7 @@
                     "plane": "storage"
                   }
                 },
-                "timeZone": {
+                "time_zone": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "default": {
@@ -1694,7 +1694,7 @@
                   "dataType": "pg/uuid",
                   "nullable": true
                 },
-                "reuse_Dectected_at": {
+                "reuse_detected_at": {
                   "codecId": "pg/timestamptz-temporal@1",
                   "dataType": "pg/timestamptz",
                   "nullable": true,
@@ -1814,14 +1814,14 @@
             "sessions": {
               "checks": [
                 {
-                  "expression": "\"plaform\" IN ('web', 'ios', 'android', 'other')",
-                  "name": "sessions_plaform_check_74535dae",
-                  "prefix": "sessions_plaform_check"
+                  "expression": "\"platform\" IN ('web', 'ios', 'android', 'other')",
+                  "name": "sessions_platform_check_e32b6888",
+                  "prefix": "sessions_platform_check"
                 },
                 {
-                  "expression": "\"revokedReason\" IN ('logout', 'logout_all', 'user_request', 'password_changed', 'password_reset', 'token_reuse', 'device_revoked', 'membership_revoked', 'security', 'admin_action')",
-                  "name": "sessions_revokedReason_check_ed4a7b66",
-                  "prefix": "sessions_revokedReason_check"
+                  "expression": "\"revoked_reason\" IN ('logout', 'logout_all', 'user_request', 'password_changed', 'password_reset', 'token_reuse', 'device_revoked', 'membership_revoked', 'security', 'admin_action')",
+                  "name": "sessions_revoked_reason_check_ad04e32b",
+                  "prefix": "sessions_revoked_reason_check"
                 }
               ],
               "columns": {
@@ -1888,7 +1888,7 @@
                     "precision": 3
                   }
                 },
-                "plaform": {
+                "platform": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": false,
@@ -1899,7 +1899,15 @@
                     "plane": "storage"
                   }
                 },
-                "revokedReason": {
+                "revoked_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "revoked_reason": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": true,
@@ -1908,14 +1916,6 @@
                     "entityName": "SessionRevocationReason",
                     "namespaceId": "public",
                     "plane": "storage"
-                  }
-                },
-                "revoked_at": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "dataType": "pg/timestamptz",
-                  "nullable": true,
-                  "typeParams": {
-                    "precision": 3
                   }
                 },
                 "updated_at": {
@@ -2265,7 +2265,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "7b1aac3b61fb4f4e2b07cccc142346b7f048399aaa870b69344fbfc56d2b233c"
+    "storageHash": "cd73ba16b4afbeb175112d884cb36f093d181c1ccfdcfe80a8a44138451da5fc"
   },
   "execution": {
     "executionHash": "131efdeb65e0a53d4f4a342a0d1a7b7f800b161dacc219c6d6a9a990b2fda41a",

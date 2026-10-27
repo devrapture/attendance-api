@@ -152,7 +152,7 @@ model User {
 model Session {
   id                Uuid                     @id @onCreate(uuid())
   userId            Uuid                     @map("user_id")
-  plaform           ClientPlatform
+  platform          ClientPlatform
   deviceName        String?                  @map("device_name")
   installationId    String?                  @map("installation_id")
   appVersion        String?                  @map("app_version")
@@ -162,7 +162,7 @@ model Session {
   lastUsedAt        Timestamptz(3)           @default(now()) @map("last_used_at")
   expiredAt         Timestamptz(3)           @map("expired_at")
   revokedAt         Timestamptz(3)?          @map("revoked_at")
-  revokedReason     SessionRevocationReason?
+  revokedReason     SessionRevocationReason? @map("revoked_reason")
 
   createdAt         temporal.createdAt()     @map("created_at") @default(now())
   updatedAt         temporal.updatedAt()     @map("updated_at")
@@ -183,7 +183,7 @@ model RefreshToken {
   expiredAt       Timestamptz(3)       @map("expired_at")
   usedAt          Timestamptz(3)?      @map("used_at")
   revokedAt       Timestamptz(3)?      @map("revoked_at")
-  reuseDetectedAt Timestamptz(3)?      @map("reuse_Dectected_at")
+  reuseDetectedAt Timestamptz(3)?      @map("reuse_detected_at")
   replacedById    Uuid?                @unique @map("replaced_by_id")
 
   createdAt       temporal.createdAt() @map("created_at")
@@ -216,7 +216,7 @@ model PasswordRefreshToken {
 model Organization {
   id              Uuid                 @id @onCreate(uuid())
   name            String
-  timeZone        String               @default("UTC")
+  timeZone        String               @default("UTC") @map("time_zone")
   status          OrganizationStatus
   createdByUserId Uuid                 @map("created_by_user_id")
 
@@ -236,7 +236,7 @@ model OrganizationMember {
   userId         Uuid                 @map("user_id")
   organizationId Uuid                 @map("organization_id")
   role           OrganizationRole
-  status         OrganizationStatus
+  status         MembershipStatus
   revokedAt      Timestamptz(3)?      @map("revoked_at")
 
   createdAt      temporal.createdAt() @map("created_at") @default(now())

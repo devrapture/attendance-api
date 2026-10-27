@@ -1,0 +1,766 @@
+[
+  {
+    "id": "dropCheckConstraint.organization_members.organization_members_status_check_697c26d8",
+    "label": "Drop check constraint \"organization_members_status_check_697c26d8\" on \"organization_members\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "organization_members_status_check_697c26d8",
+        "table": "organization_members"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"organization_members_status_check_697c26d8\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "organization_members_status_check_697c26d8",
+          "public",
+          "\"public\".\"organization_members\""
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "constraint \"organization_members_status_check_697c26d8\" on \"organization_members\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"organization_members_status_check_697c26d8\"",
+        "sql": "ALTER TABLE \"public\".\"organization_members\" DROP CONSTRAINT \"organization_members_status_check_697c26d8\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"organization_members_status_check_697c26d8\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "organization_members_status_check_697c26d8",
+          "public",
+          "\"public\".\"organization_members\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"organization_members_status_check_697c26d8\" on \"organization_members\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.organizations.timeZone",
+    "label": "Drop column \"timeZone\" from \"organizations\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "timeZone",
+        "table": "organizations"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"timeZone\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "organizations",
+          "timeZone"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"timeZone\" on \"organizations\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"timeZone\"",
+        "sql": "ALTER TABLE \"public\".\"organizations\" DROP COLUMN \"timeZone\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"timeZone\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "organizations",
+          "timeZone"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"timeZone\" on \"organizations\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.refresh_tokens.reuse_Dectected_at",
+    "label": "Drop column \"reuse_Dectected_at\" from \"refresh_tokens\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "reuse_Dectected_at",
+        "table": "refresh_tokens"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"reuse_Dectected_at\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "refresh_tokens",
+          "reuse_Dectected_at"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"reuse_Dectected_at\" on \"refresh_tokens\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"reuse_Dectected_at\"",
+        "sql": "ALTER TABLE \"public\".\"refresh_tokens\" DROP COLUMN \"reuse_Dectected_at\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"reuse_Dectected_at\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "refresh_tokens",
+          "reuse_Dectected_at"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"reuse_Dectected_at\" on \"refresh_tokens\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropCheckConstraint.sessions.sessions_plaform_check_74535dae",
+    "label": "Drop check constraint \"sessions_plaform_check_74535dae\" on \"sessions\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "sessions_plaform_check_74535dae",
+        "table": "sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"sessions_plaform_check_74535dae\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "sessions_plaform_check_74535dae",
+          "public",
+          "\"public\".\"sessions\""
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "constraint \"sessions_plaform_check_74535dae\" on \"sessions\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"sessions_plaform_check_74535dae\"",
+        "sql": "ALTER TABLE \"public\".\"sessions\" DROP CONSTRAINT \"sessions_plaform_check_74535dae\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"sessions_plaform_check_74535dae\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "sessions_plaform_check_74535dae",
+          "public",
+          "\"public\".\"sessions\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"sessions_plaform_check_74535dae\" on \"sessions\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropCheckConstraint.sessions.sessions_revokedReason_check_ed4a7b66",
+    "label": "Drop check constraint \"sessions_revokedReason_check_ed4a7b66\" on \"sessions\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "sessions_revokedReason_check_ed4a7b66",
+        "table": "sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"sessions_revokedReason_check_ed4a7b66\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "sessions_revokedReason_check_ed4a7b66",
+          "public",
+          "\"public\".\"sessions\""
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "constraint \"sessions_revokedReason_check_ed4a7b66\" on \"sessions\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"sessions_revokedReason_check_ed4a7b66\"",
+        "sql": "ALTER TABLE \"public\".\"sessions\" DROP CONSTRAINT \"sessions_revokedReason_check_ed4a7b66\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"sessions_revokedReason_check_ed4a7b66\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "sessions_revokedReason_check_ed4a7b66",
+          "public",
+          "\"public\".\"sessions\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"sessions_revokedReason_check_ed4a7b66\" on \"sessions\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.sessions.plaform",
+    "label": "Drop column \"plaform\" from \"sessions\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "plaform",
+        "table": "sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"plaform\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "sessions",
+          "plaform"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"plaform\" on \"sessions\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"plaform\"",
+        "sql": "ALTER TABLE \"public\".\"sessions\" DROP COLUMN \"plaform\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"plaform\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "sessions",
+          "plaform"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"plaform\" on \"sessions\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.sessions.revokedReason",
+    "label": "Drop column \"revokedReason\" from \"sessions\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "revokedReason",
+        "table": "sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"revokedReason\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "sessions",
+          "revokedReason"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"revokedReason\" on \"sessions\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"revokedReason\"",
+        "sql": "ALTER TABLE \"public\".\"sessions\" DROP COLUMN \"revokedReason\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"revokedReason\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "sessions",
+          "revokedReason"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"revokedReason\" on \"sessions\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "column.public.organizations.time_zone",
+    "label": "Add column \"time_zone\" to \"organizations\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "time_zone",
+        "table": "organizations"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"time_zone\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "organizations",
+          "time_zone"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"time_zone\" on \"organizations\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"time_zone\"",
+        "sql": "ALTER TABLE \"public\".\"organizations\" ADD COLUMN \"time_zone\" text DEFAULT 'UTC' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"time_zone\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "organizations",
+          "time_zone"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"time_zone\" on \"organizations\""
+        }
+      },
+      {
+        "description": "verify column \"time_zone\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "organizations",
+          "time_zone",
+          "text"
+        ]
+      },
+      {
+        "description": "verify column \"time_zone\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "organizations",
+          "time_zone",
+          "NO"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.refresh_tokens.reuse_detected_at",
+    "label": "Add column \"reuse_detected_at\" to \"refresh_tokens\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "reuse_detected_at",
+        "table": "refresh_tokens"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"reuse_detected_at\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "refresh_tokens",
+          "reuse_detected_at"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"reuse_detected_at\" on \"refresh_tokens\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"reuse_detected_at\"",
+        "sql": "ALTER TABLE \"public\".\"refresh_tokens\" ADD COLUMN \"reuse_detected_at\" timestamptz(3)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"reuse_detected_at\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "refresh_tokens",
+          "reuse_detected_at"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"reuse_detected_at\" on \"refresh_tokens\""
+        }
+      },
+      {
+        "description": "verify column \"reuse_detected_at\" has type \"timestamp(3) with time zone\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "refresh_tokens",
+          "reuse_detected_at",
+          "timestamp(3) with time zone"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.sessions.revoked_reason",
+    "label": "Add column \"revoked_reason\" to \"sessions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "revoked_reason",
+        "table": "sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"revoked_reason\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "sessions",
+          "revoked_reason"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"revoked_reason\" on \"sessions\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"revoked_reason\"",
+        "sql": "ALTER TABLE \"public\".\"sessions\" ADD COLUMN \"revoked_reason\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"revoked_reason\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "sessions",
+          "revoked_reason"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"revoked_reason\" on \"sessions\""
+        }
+      },
+      {
+        "description": "verify column \"revoked_reason\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "sessions",
+          "revoked_reason",
+          "text"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.sessions.platform",
+    "label": "Add column platform to sessions",
+    "summary": "Adds column platform to table sessions",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "platform",
+        "table": "sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"platform\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "sessions",
+          "platform"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"platform\" on \"sessions\""
+        }
+      },
+      {
+        "description": "ensure table \"sessions\" is empty before adding NOT NULL column without default",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"sessions\" LIMIT 1) AS \"result\"",
+        "params": [],
+        "meta": {
+          "requiredColumn": {
+            "table": "sessions",
+            "column": "platform",
+            "reason": "newField"
+          }
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"platform\"",
+        "sql": "ALTER TABLE \"public\".\"sessions\" ADD COLUMN \"platform\" text NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"platform\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "sessions",
+          "platform"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"platform\" on \"sessions\""
+        }
+      },
+      {
+        "description": "verify column \"platform\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "sessions",
+          "platform",
+          "NO"
+        ]
+      },
+      {
+        "description": "verify column \"platform\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "sessions",
+          "platform",
+          "text"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.organization_members.organization_members_status_check_4cc0f702",
+    "label": "Add check constraint \"organization_members_status_check_4cc0f702\" on \"organization_members\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "organization_members_status_check_4cc0f702",
+        "table": "organization_members"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"organization_members_status_check_4cc0f702\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "organization_members_status_check_4cc0f702",
+          "public",
+          "\"public\".\"organization_members\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"organization_members_status_check_4cc0f702\" on \"organization_members\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"organization_members_status_check_4cc0f702\"",
+        "sql": "ALTER TABLE \"public\".\"organization_members\" ADD CONSTRAINT \"organization_members_status_check_4cc0f702\" CHECK (\"status\" IN ('active', 'revoked'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"organization_members_status_check_4cc0f702\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "organization_members_status_check_4cc0f702",
+          "public",
+          "\"public\".\"organization_members\"",
+          "c"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.sessions.sessions_platform_check_e32b6888",
+    "label": "Add check constraint \"sessions_platform_check_e32b6888\" on \"sessions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "sessions_platform_check_e32b6888",
+        "table": "sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"sessions_platform_check_e32b6888\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "sessions_platform_check_e32b6888",
+          "public",
+          "\"public\".\"sessions\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"sessions_platform_check_e32b6888\" on \"sessions\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"sessions_platform_check_e32b6888\"",
+        "sql": "ALTER TABLE \"public\".\"sessions\" ADD CONSTRAINT \"sessions_platform_check_e32b6888\" CHECK (\"platform\" IN ('web', 'ios', 'android', 'other'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"sessions_platform_check_e32b6888\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "sessions_platform_check_e32b6888",
+          "public",
+          "\"public\".\"sessions\"",
+          "c"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.sessions.sessions_revoked_reason_check_ad04e32b",
+    "label": "Add check constraint \"sessions_revoked_reason_check_ad04e32b\" on \"sessions\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "sessions_revoked_reason_check_ad04e32b",
+        "table": "sessions"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"sessions_revoked_reason_check_ad04e32b\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "sessions_revoked_reason_check_ad04e32b",
+          "public",
+          "\"public\".\"sessions\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"sessions_revoked_reason_check_ad04e32b\" on \"sessions\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"sessions_revoked_reason_check_ad04e32b\"",
+        "sql": "ALTER TABLE \"public\".\"sessions\" ADD CONSTRAINT \"sessions_revoked_reason_check_ad04e32b\" CHECK (\"revoked_reason\" IN ('logout', 'logout_all', 'user_request', 'password_changed', 'password_reset', 'token_reuse', 'device_revoked', 'membership_revoked', 'security', 'admin_action'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"sessions_revoked_reason_check_ad04e32b\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "sessions_revoked_reason_check_ad04e32b",
+          "public",
+          "\"public\".\"sessions\"",
+          "c"
+        ]
+      }
+    ]
+  }
+]

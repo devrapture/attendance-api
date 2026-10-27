@@ -1,7 +1,8 @@
 import { FactoryProvider, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { environmentSchema, ValidatedEnvironment } from './environment.schema';
-import { APP_CONFIG, createAppConfig } from './app-config';
+import type { ValidatedEnvironment } from './environment.schema';
+import { environmentSchema } from './environment.schema.js';
+import { APP_CONFIG, createAppConfig } from './app-config.js';
 
 const readValidatedEnvironment = (
   config: ConfigService<ValidatedEnvironment, true>,
