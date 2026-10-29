@@ -19,6 +19,27 @@ const readValidatedEnvironment = (
   DATABASE_URL: config.getOrThrow('DATABASE_URL', {
     infer: true,
   }),
+  JWT_ACCESS_SECRET: config.getOrThrow('JWT_ACCESS_SECRET', {
+    infer: true,
+  }),
+  JWT_REFRESH_SECRET: config.getOrThrow('JWT_REFRESH_SECRET', {
+    infer: true,
+  }),
+  JWT_ISSUER: config.getOrThrow('JWT_ISSUER', {
+    infer: true,
+  }),
+  JWT_AUDIENCE: config.getOrThrow('JWT_AUDIENCE', {
+    infer: true,
+  }),
+  JWT_ACCESS_TTL_SECONDS: config.getOrThrow('JWT_ACCESS_TTL_SECONDS', {
+    infer: true,
+  }),
+  JWT_REFRESH_TTL_SECONDS: config.getOrThrow('JWT_REFRESH_TTL_SECONDS', {
+    infer: true,
+  }),
+  PASSWORD_RESET_TTL_SECONDS: config.getOrThrow('PASSWORD_RESET_TTL_SECONDS', {
+    infer: true,
+  }),
 });
 
 const appConfigProvider: FactoryProvider = {
