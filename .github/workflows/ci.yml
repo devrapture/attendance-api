@@ -1,0 +1,168 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, staging]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '24'
+  PNPM_VERSION: '12.15.0'
+  CI: 'true'
+  HUSKY: '0'
+  DATABASE_URL: postgresql://${{ vars.POSTGRES_USER != '' && vars.POSTGRES_USER || 'attendance' }}:${{ secrets.POSTGRES_PASSWORD != '' && secrets.POSTGRES_PASSWORD || 'ci-only-secret' }}@127.0.0.1:5432/${{ vars.POSTGRES_DB != '' && vars.POSTGRES_DB || 'attendance' }}
+  JWT_ACCESS_SECRET: ci-only-access-secret-change-me-32-chars
+  JWT_REFRESH_SECRET: ci-only-refresh-secret-change-me-32-chars
+  JWT_ISSUER: attendance-api
+  JWT_AUDIENCE: attendance-clients
+
+jobs:
+  check:
+    name: Format / Lint / Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v6
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec prettier --check "src/**/*.ts" "test/**/*.ts"
+      - run: pnpm run lint
+      - run: pnpm exec tsc -p tsconfig.build.json --noEmit
+      - run: pnpm run contract:emit
+      - run: git diff --exit-code -- src/prisma/contract.json src/prisma/contract.d.ts
+      - run: pnpm exec prisma migration check
+
+  unit:
+    name: Unit tests + coverage
+    needs: check
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v6
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run test:cov
+      - uses: actions/upload-artifact@v7
+        with:
+          name: coverage
+          path: coverage/
+          if-no-files-found: error
+          retention-days: 7
+
+  build:
+    name: nest build
+    needs: unit
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v6
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: test -f dist/main.js
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  db:
+    name: Migration + e2e smoke test
+    needs: check
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18.6-bookworm
+        env:
+          POSTGRES_DB: ${{ vars.POSTGRES_DB != '' && vars.POSTGRES_DB || 'attendance' }}
+          POSTGRES_USER: ${{ vars.POSTGRES_USER != '' && vars.POSTGRES_USER || 'attendance' }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD != '' && secrets.POSTGRES_PASSWORD || 'ci-only-secret' }}
+        ports:
+          - '5432:5432'
+        options: >-
+          --health-cmd "pg_isready -U ${{ vars.POSTGRES_USER != '' && vars.POSTGRES_USER || 'attendance' }} -d ${{ vars.POSTGRES_DB != '' && vars.POSTGRES_DB || 'attendance' }}"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v6
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - name: Wait for PostgreSQL
+        run: |
+          attempts=30
+          until (echo > /dev/tcp/127.0.0.1/5432) >/dev/null 2>&1; do
+            attempts=$((attempts - 1))
+            if [ "$attempts" -le 0 ]; then
+              echo "PostgreSQL did not become ready in time" >&2
+              exit 1
+            fi
+            sleep 2
+          done
+          echo "PostgreSQL is ready"
+      - name: Apply database migrations
+        run: pnpm exec prisma db migrate
+      - name: Check database migration status
+        run: pnpm exec prisma migration status
+      - name: Verify database schema
+        run: pnpm exec prisma db verify
+      - name: Run e2e tests
+        run: pnpm run test:e2e
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v6
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: pnpm audit --prod --audit-level=high
+
+  secrets:
+    name: Secret scan (Gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

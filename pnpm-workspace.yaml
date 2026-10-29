@@ -1,3 +1,7 @@
 allowBuilds:
   esbuild: true
   workerd: true
+# Security fixes for transitive dependencies of the unused Express adapter.
+overrides:
+  body-parser: 2.4.0
+  multer: 2.5.0
