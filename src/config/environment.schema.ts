@@ -21,6 +21,13 @@ export interface ValidatedEnvironment {
   readonly PORT: number;
   readonly LOG_LEVEL: LogLevel;
   readonly DATABASE_URL: string;
+  readonly JWT_ACCESS_SECRET: string;
+  readonly JWT_REFRESH_SECRET: string;
+  readonly JWT_ISSUER: string;
+  readonly JWT_AUDIENCE: string;
+  readonly JWT_ACCESS_TTL_SECONDS: number;
+  readonly JWT_REFRESH_TTL_SECONDS: number;
+  readonly PASSWORD_RESET_TTL_SECONDS: number;
 }
 
 export const environmentSchema = Joi.object<ValidatedEnvironment>({
@@ -43,5 +50,45 @@ export const environmentSchema = Joi.object<ValidatedEnvironment>({
       .valid(...LOG_LEVELS)
       .default('silent'),
   }),
-  DATABASE_URL: Joi.string().required(),
+  DATABASE_URL: Joi.string()
+    .trim()
+    .uri({ scheme: ['postgres', 'postgresql'] })
+    .required()
+    .messages({
+      'string.uri': 'DATABASE_URL must be a valid PostgreSQL connection URL.',
+      'string.uriCustomScheme':
+        'DATABASE_URL must use the postgres or postgresql scheme.',
+    }),
+  JWT_ACCESS_SECRET: Joi.string().min(32).max(256).required(),
+
+  JWT_REFRESH_SECRET: Joi.string()
+    .min(32)
+    .max(256)
+    .required()
+    .invalid(Joi.ref('JWT_ACCESS_SECRET'))
+    .messages({
+      'any.invalid': 'Access and refresh signing secrets must be different.',
+    }),
+
+  JWT_ISSUER: Joi.string().trim().min(1).max(200).required(),
+
+  JWT_AUDIENCE: Joi.string().trim().min(1).max(200).required(),
+
+  JWT_ACCESS_TTL_SECONDS: Joi.number()
+    .integer()
+    .positive()
+    .max(86_400)
+    .default(900),
+
+  JWT_REFRESH_TTL_SECONDS: Joi.number()
+    .integer()
+    .positive()
+    .max(31_536_000)
+    .default(2_592_000),
+
+  PASSWORD_RESET_TTL_SECONDS: Joi.number()
+    .integer()
+    .positive()
+    .max(86_400)
+    .default(1_800),
 });
